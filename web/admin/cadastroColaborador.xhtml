@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"  xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" 
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <h:head>
+        <title>SGH - Sistema Gerenciador de Horários</title>
+
+        <h:outputStylesheet library="materialize/css" name="materialize.css"/>
+        <h:outputStylesheet library="sgh/css" name="menu.css"/>
+        <h:outputStylesheet library="datatables" name="datatables.css"/>
+        <h:outputStylesheet library="sgh/css" name="cadastroColaborador.css"/>
+
+
+        <link type="text/css" href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"></link>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta charset="utf-8" />
+        <h:outputScript library="materialize/js" name="jquery-ui.min.js"/>
+        <h:outputScript library="materialize/js" name="jquery.mask.min.js"/>
+        <h:outputScript library="materialize/js" name="materialize.js"/>
+        <h:outputScript library="datatables" name="datatables.js"/>
+        <h:outputScript library="sgh/js" name="evCadastroColaborador.js"/>
+
+        <h:outputScript library="sgh/js" name="menu.js"/>
+
+
+    </h:head>
+    <h:body>
+       
+
+
+                <div id="header-container">
+                    <div id="header">
+                        <ui:include src="/menu.xhtml"/>
+                    </div>
+                </div>
+         <div id="page">
+            <div class="container">
+                <div id="content-container">
+                    <div id="content">
+                        <div class="row">
+                            <div class="col s12">
+                                <h4 class="blue-text darken-1">Cadastro de Colaborador</h4>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s12">
+                                <ul class="tabs black-text grey lighten-4 ">
+                                    <li class="tab col s4"><a href="#dadosPessoais" class="actived">Dados Pessoais</a></li>
+                                    <li class="tab col s4"><a href="#contrato">Contrato</a></li>
+                                    <li class="tab col s4 "><a href="#perfilCompetencias">Perfil e Competências</a></li>
+                                    <li class="tab col s4 "><a href="#horarioTrabalho">Horários de Trabalho</a></li>
+                                </ul>
+
+
+                            </div>
+                        </div>
+                        <h:form>
+                            <div id="dadosPessoais" class="col s12">
+                                <br/>
+                                <br/>
+                                <div class="row">
+                                    <div class="input-field col s6">
+                                        <label for="matricula">Matrícula</label>
+                                        <h:inputText id="matricula"
+                                                     onkeydown="return isNumber(event)"
+                                                     pt:maxLength="8"
+                                                     value="#{cadastroColaboradorBean.colaborador.matricula}"/>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="input-field col s10">
+                                        <h:inputText id="nome" value="#{cadastroColaboradorBean.colaborador.pessoa.nome}"
+                                                     onkeydown="return isNameValid(event)"/>
+                                        <label for="nome">Nome</label>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col s4">
+                                        <label for="dataNascimento">Data de Nascimento</label>
+                                        <h:inputText pt:type="date" styleClass="datepicker" id="dataNascimento"
+                                                     value="#{cadastroColaboradorBean.colaborador.pessoa.dataNascimento}"
+                                                     converter="dataConverter"/>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="input-field col s10">
+                                        <h:inputText id="email" pt:type="email" styleClass="validate"
+                                                     value="#{cadastroColaboradorBean.colaborador.emailComercial}">
+                                            <f:ajax render="usuario" execute="@this" event="keyup" listener="#{cadastroColaboradorBean.atualizarNomeUsuario()}"/> 
+                                        </h:inputText>
+                                        <label for="email" data-error="E-mail incorreto" data-success="">Email</label>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="input-field col s5">
+                                        <h:inputText id="telefone" styleClass="telefone"
+                                                     value="#{cadastroColaboradorBean.colaborador.pessoa.telefonePessoal}"/>
+                                        <label for="telefone">Telefone Pessoal</label>
+                                    </div>
+
+                                    <div class="input-field col s5">
+                                        <h:inputText id="telefoneR" styleClass="telefone"
+                                                     value="#{cadastroColaboradorBean.colaborador.pessoa.telefoneResidencial}"/>
+                                        <label for="telefoneR">Telefone Residencial</label>
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+                                    <div class="input-field col s10 m10 l10">
+                                        <h:inputTextarea id="inf" styleClass="materialize-textarea"
+                                                         value="#{cadastroColaboradorBean.colaborador.observacao}"/>
+                                        <label for="inf">Informações adicionais</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-field col s4">
+
+                                        <h:inputText id="usuario" value="#{cadastroColaboradorBean.usuario}" /> 
+                                        <label for="usuario">Usuário</label>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="input-field col s4">
+                                        <h:inputSecret id="senha" value="#{cadastroColaboradorBean.colaborador.pessoa.login.senha}"/> 
+                                        <label for="senha">Senha</label>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div id="contrato" class="col s12">
+                                <br/>
+                                <br/>
+                                <div class="row">
+                                    <div class="input-field col s12 m8 l8">
+                                        <h:selectOneMenu converter="AreaConverter" value="#{cadastroColaboradorBean.colaborador.area}"
+                                                         styleClass="browser-default">
+                                            <f:selectItem itemLabel="Selecione a àrea" itemValue="null" noSelectionOption="true"/>
+                                            <f:selectItems value="#{cadastroColaboradorBean.areas}"
+                                                           var="area"
+                                                           itemLabel="#{area.descricao}"
+                                                           itemValue="#{area}"/>
+                                        </h:selectOneMenu>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-field col s12 m8 l8">
+                                        <h:selectOneMenu converter="modalidadeConverter"
+                                                         id="modalidade" value="#{cadastroColaboradorBean.colaborador.modalidade}"
+                                                         styleClass="browser-default">
+                                            <f:selectItem itemValue="#{null}" itemLabel="Selecione a modalidade" noSelectionOption="true"/>
+                                            <f:selectItems value="#{cadastroTurmaBean.modalidades}"
+                                                           var="modalidade"
+                                                           itemLabel="#{modalidade.nome}"
+                                                           itemValue="#{modalidade}"/>
+                                        </h:selectOneMenu>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-field col s12 m8 l8">
+                                        <h:selectOneMenu converter="TipoContratoConverter" value="#{cadastroColaboradorBean.colaborador.tipoContrato}"
+                                                         styleClass="browser-default">
+                                            <f:selectItem itemLabel="Selecione o tipo de contrato" itemValue="null" noSelectionOption="true"/>
+                                            <f:selectItems value="#{cadastroColaboradorBean.contratos}"
+                                                           var="contrato"
+                                                           itemLabel="#{contrato.descricao}"
+                                                           itemValue="#{contrato}"/>
+                                            <f:ajax render="horaDiaria" execute="@this" event="change" listener="#{cadastroColaboradorBean.verificarHorasDiarias()}"/>
+                                        </h:selectOneMenu>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="input-field col s12 m8 l8">
+                                        <h:selectOneMenu id="horaDiaria"
+                                                         value="#{cadastroColaboradorBean.colaborador.quantidadeHoraDiaria}"
+                                                         disabled="#{cadastroColaboradorBean.mensalista == false}"
+                                                         styleClass="browser-default">
+                                            <f:selectItem itemValue="null" itemLabel="Selecione a hora diaria" noSelectionOption="true"/>
+                                            <f:selectItem itemValue="8" itemLabel="8 horas"/>
+                                            <f:selectItem itemValue="6" itemLabel="6 horas"/>
+                                            <f:selectItem itemValue="4" itemLabel="4 horas"/>
+                                        </h:selectOneMenu>
+                                    </div>
+                                </div>
+
+
+                                <div class="row">
+                                    <div class="input-field col s4">
+                                        <h:inputText id="ramal" 
+                                                     value="#{cadastroColaboradorBean.colaborador.ramal}"
+                                                     onkeydown="return isNumber(event)"
+                                                     pt:maxlength="5"/>
+                                        <label for="ramal">Ramal</label>
+                                    </div>
+                                </div>
+                            </div> 
+                            <div id="perfilCompetencias" class="col s12">
+                                <br/>
+                                <br/>
+                                <div class="row">
+                                    <div class="col s12 m12 l12">
+                                        <div class="col s3">
+                                            <label id="lbPerfil"> Perfil</label>
+                                        </div>
+                                        <div class="col s3">
+                                            <h:selectBooleanCheckbox id="coordM" value="#{cadastroColaboradorBean.coordModalidade}"/>
+                                            <h:outputLabel for="coordM" value="Coordenador de Modalidade"/> 
+                                        </div>
+                                        <div class="col s3">
+                                            <h:selectBooleanCheckbox id="coordC" value="#{cadastroColaboradorBean.coordCurso}">
+                                                <f:ajax render="cursos" execute="@this" event="change"/>
+                                            </h:selectBooleanCheckbox>
+                                            <h:outputLabel for="coordC" value="Coordenador de Curso"/> 
+                                        </div>
+
+                                        <div class="col s3">
+                                            <h:selectBooleanCheckbox id="professor" value="#{cadastroColaboradorBean.professor}">
+                                                <f:ajax render="pickList" execute="@this" event="change"/>
+                                            </h:selectBooleanCheckbox>
+                                            <h:outputLabel for="professor" value="Professor"/> 
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="row">
+                                        <div class="col s12">
+                                            <h5> Cursos de Coordenação</h5>
+                                        </div>
+                                    </div>
+                                    <h:panelGrid columns="10"  cellpadding="5">
+                                        <p:column colspan="2">
+                                            <p:outputLabel value="Cursos:" for="cursos" />
+                                        </p:column>
+                                        <p:column colspan="8">
+                                            <p:autoComplete disabled="#{cadastroColaboradorBean.coordCurso == false}" 
+                                                            id="cursos" multiple="true" value="#{cadastroColaboradorBean.cursosSelecionados}"
+                                                            var="curso" 
+                                                            completeMethod="#{cadastroColaboradorBean.procurarCursos}"
+                                                            itemLabel="#{curso.nome}"
+                                                            itemValue="#{curso}" 
+                                                            effectDuration="30"
+                                                            maxResults="10"
+                                                            converter="cursoConverter"
+                                                            emptyMessage="Nenhum curso encontrado"
+                                                            forceSelection="true">
+                                                <p:ajax event="itemUnselect" listener="#{cadastroColaboradorBean.removerCursoSelecionado}" update="cursos" />  
+                                                <p:ajax event="itemSelect" listener="#{cadastroColaboradorBean.cursoSelecionado}" update="cursos" />  
+                                                <h:outputText value="#{curso.sigla}"/>
+                                            </p:autoComplete>
+                                        </p:column>
+                                    </h:panelGrid>
+                                </div>
+                                <div class="row">
+                                    <div class="row">
+                                        <div class="col s12">
+                                            <h5>Unidades Curriculares</h5>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <p:pickList id="pickList" value="#{cadastroColaboradorBean.unidadesCurricularesPesquisa}" 
+                                                    disabled="#{cadastroColaboradorBean.professor == false}"
+                                                    var="uc" effect="pulsate"
+                                                    itemValue="#{uc}" itemLabel="#{uc.modalidade} - #{uc.nome} - #{uc.cargaHoraria}"
+                                                    showSourceFilter="true"
+                                                    showTargetFilter="true"
+                                                    showCheckbox="true"
+                                                    filterMatchMode="contains"
+                                                    converter="unidadeCurricularConverter">
+                                            <f:facet name="sourceCaption">Todas</f:facet>
+                                            <f:facet name="targetCaption">Habilitadas</f:facet>
+                                            <p:column style="width: 100%">
+                                                <h:outputText value="#{uc.modalidade} - #{uc.nome} - #{uc.cargaHoraria}hs"/>
+                                            </p:column>
+                                        </p:pickList>
+
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div id="horarioTrabalho">
+                                <br/>
+
+                                <div class="row">
+                                    <div class="col s3 right-align offset-s2">
+                                        <h:commandLink styleClass="waves-effect waves-light btn green darken-1"
+
+                                                       id="btPreferencial">
+                                            Preferencial</h:commandLink>
+                                    </div>
+
+                                    <div class="col s3 center-align">
+                                        <h:commandLink styleClass="waves-effect waves-light btn blue darken-3">
+                                            Disponível</h:commandLink>
+                                    </div>
+
+                                    <div class="col s3 left-align">
+                                        <h:commandLink styleClass="waves-effect waves-light btn red darken-1">
+                                            Indisponível</h:commandLink>
+                                    </div>
+                                </div>
+
+                                <br/>
+                                <br/>
+
+                                <br/>
+                                <br/>
+                                <div class="row">
+                                    <div class="col s1">
+                                        <span class="blue-text"> Horário</span>
+                                    </div>
+                                    <c:forEach items="#{cadastroColaboradorBean.dias}" var="dia">
+                                        <div class="col s2">
+                                            <h:outputLabel value="#{dia}"/>
+                                        </div>
+                                    </c:forEach>
+
+
+                                </div>
+
+                                <div class="row" id="divGrade">
+                                    <c:forEach var="horario" items="#{cadastroColaboradorBean.gradeHoraria.keySet()}"
+                                               varStatus="status">                            
+
+                                        <div class="col s1">
+                                            <h:outputText value="#{horario}"/>
+                                        </div>
+
+                                        <c:forEach var="dia" items="#{cadastroColaboradorBean.gradeHoraria.get(horario).keySet()}">
+
+                                            <div class="col s2 #{dia.descricao}">
+
+                                                <h:selectOneMenu
+                                                    value="#{cadastroColaboradorBean.gradeHoraria[horario][dia]}"
+                                                    converter="disponibilidadeConverter">
+
+                                                    <f:selectItems value="#{cadastroColaboradorBean.disponibilidades}"
+                                                                   var="disp"
+                                                                   itemLabel="#{disp.descricao}"
+                                                                   itemValue="#{disp}"/>
+                                                </h:selectOneMenu>                                  
+
+                                            </div>
+                                        </c:forEach>
+
+                                    </c:forEach>
+                                </div>
+
+
+                            </div>  
+
+                            <div class="row">
+                                <div class="col s6 m8 l9 right-align">
+                                    <h:commandLink styleClass="waves-effect waves-light btn  teal darken-1"
+                                                   action="listagemColaborador.jsf?faces-redirect=true">
+                                        <i class="material-icons left">keyboard_backspace</i>Voltar</h:commandLink>
+                                </div>
+                                <div class="col s6 m4 l3 right-align btCadColaborador">
+                                    <h:commandLink actionListener="#{cadastroColaboradorBean.salvar()}" styleClass="waves-effect waves-light btn blue darken-1">
+                                        <i class="material-icons left">done</i>Salvar</h:commandLink>
+                                    <h:inputHidden id="hidden" class="hidden" value="#{cadastroColaboradorBean.mensagem}"/>
+                                </div>
+                            </div> 
+                        </h:form>
+                    </div>
+                </div>
+            </div>
+            <div id="content-container">
+                <div style="margin-top:80px;" id="content">
+                    <footer style="text-align: center; border-top: 1px solid #ddd;bottom: 0;color: #737373;padding: 5px;position: fixed; background-color: #fff; width: 100%;">
+                        SENAI 2015
+                    </footer>
+                </div>
+            </div>
+        </div>
+            <h:outputStylesheet library="sgh/css" name="cadastroCurso.css"/>
+
+            <h:outputScript library="sgh/js" name="evCadastroColaborador.js"></h:outputScript>
+            
+    </h:body>
+</html>

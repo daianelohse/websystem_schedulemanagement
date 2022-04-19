@@ -1,0 +1,155 @@
+<ui:composition template="/template.xhtml"  xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html" 
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough" 
+                xmlns:jsf="http://xmlns.jcp.org/jsf"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <ui:define name="corpo">
+        <div id="telaCadastroAmbiente" class="container">
+            <div class="row">
+                <div class="col s12">
+                    <h4 class="blue-text darken-1">Cadastro de Ambiente</h4>
+                </div>
+            </div>
+            <h:form>
+                <div class="row">
+                    <div class="col s12">
+                        <div class="row">
+                            <div class="col s12 m8 l8">
+                                <h:selectOneMenu class="browser-default"
+                                                 converter="localConverter"
+                                                 value="#{cadastroAmbienteBean.ambiente.localizacao}">
+                                    <f:selectItem itemLabel="Selecione um local" itemValue="null"/>
+                                    <f:selectItems value="#{cadastroAmbienteBean.locais}"
+                                                   var="localizacaoVar"
+                                                   itemValue="#{localizacaoVar}"
+                                                   itemLabel="#{localizacaoVar.nome}"/>
+                                </h:selectOneMenu>
+                                <label>Local</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s12 m8 l8">
+                                <h:selectOneMenu class="browser-default"
+                                                 converter="tipoAmbiente" value="#{cadastroAmbienteBean.ambiente.tipoAmbiente}">
+                                    <f:selectItem itemLabel="Selecione um tipo para o ambiente" itemValue=""/>
+                                    <f:selectItems value="#{cadastroAmbienteBean.tipoAmbientes}"
+                                                   var="tipoAmbiente"
+                                                   itemLabel="#{tipoAmbiente.nome}"
+                                                   itemValue="#{tipoAmbiente}"/>
+                                </h:selectOneMenu>
+
+                                <label>Tipo Ambiente</label>
+                            </div>  
+                        </div>
+
+
+                        <div class="row">
+                            <div class="input-field col s4 m4 l4">
+                                <label for="bloco">Bloco</label>
+                                <h:inputText converter="upperCase" 
+                                             style="text-transform: uppercase;"
+                                             pt:maxlength="4" id="bloco" 
+                                             value="#{cadastroAmbienteBean.ambiente.bloco}">
+
+                                    <f:ajax event="keyup" render="siglaGerada" execute="bloco"/>
+                                </h:inputText>
+                            </div>
+                            <div class="input-field col s4 m4 l4">
+                                <label for="numero">Número</label>
+                                <h:inputText pt:maxlength="4" id="numero"
+                                             value="#{cadastroAmbienteBean.ambiente.numero}"
+                                             onkeydown="return isNumber(event);">
+                                    <f:ajax event="keyup" render="siglaGerada" execute="numero"/>
+                                </h:inputText>
+                            </div>
+                            <div class="input-field col s4 m4 l4">
+                                <h:selectOneMenu class="browser-default"
+                                                 value="#{cadastroAmbienteBean.ambiente.andar}">
+                                    <f:selectItem itemValue="-1" itemLabel="Selecione"/>
+                                    <f:selectItem itemValue="0" itemLabel="Térreo"/>
+                                    <f:selectItem itemValue="1" itemLabel="1º Andar"/>
+                                    <f:selectItem itemValue="2" itemLabel="2º Andar"/>
+                                </h:selectOneMenu>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s6 m4 l4">
+                                <label pt:maxlength="3" for="capacidade">Capacidade (lugares)</label>
+                                <h:inputText id="capacidade" onkeydown="return isNumber(event);"
+                                             pt:maxlength="3"
+                                             value="#{cadastroAmbienteBean.ambiente.capacidade}">
+                                </h:inputText>
+                            </div>
+
+                            <div class="col s4 m4 l4 offset-s2 browser-default">
+                                <h:selectOneMenu value="#{cadastroAmbienteBean.ambiente.situacao}"
+                                                 class="browser-default">
+                                    <f:selectItems value="#{cadastroAmbienteBean.situacoes}"
+                                                   var="situacaoAmbiente"
+                                                   itemLabel="#{situacaoAmbiente.situacao}"
+                                                   itemValue="#{situacaoAmbiente}"/>
+                                </h:selectOneMenu>
+                                <label>Situação</label>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col s6 m4 l4">
+                                <h:selectBooleanCheckbox id="divisao" value="#{cadastroAmbienteBean.isDivido}">
+                                    <f:ajax event="change" execute="divisao" render="divisaoInp"/>
+                                    <f:ajax render="divisaoInp siglaGerada" listener="#{cadastroAmbienteBean.atualizarSigla()}"/>
+                                </h:selectBooleanCheckbox>    
+                                <h:outputLabel for="divisao" value="É dividido"/>
+                            </div>
+                            <div class="input-field col s6 m4 l4">
+                                <h:inputText  pt:maxlength="4" 
+                                              converter="upperCase" 
+                                              style="text-transform: uppercase;"
+                                              id="divisaoInp"
+                                              value="#{cadastroAmbienteBean.ambiente.divisao}"
+                                              disabled="#{cadastroAmbienteBean.isDivido==false}">
+
+                                    <f:ajax event="keyup" render="siglaGerada" execute="divisaoInp"/>
+                                </h:inputText>
+                                <label for="divisaoInp">Nome da Divisão</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s4 m8 l8 offset-s2">
+                                <h:outputText  id="siglaGerada" value="Sigla Gerada: #{cadastroAmbienteBean.ambiente.sigla}"/>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="input-field col s12 m12 l12">
+                                <h:inputTextarea id="obs" styleClass="materialize-textarea"
+                                                 value="#{cadastroAmbienteBean.ambiente.observacao}"/>
+                                <label for="obs">Observações</label>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col s6 m8 l9 right-align">
+                                <h:commandLink styleClass="waves-effect waves-light btn  teal darken-1"
+                                               action="listagemAmbientes.jsf?faces-redirect=true">
+                                    <i class="material-icons left">keyboard_backspace</i>Voltar</h:commandLink>
+                            </div>
+
+
+
+                            <div class="col s6 m4 l3 right-align btCadAmbiente"> 
+                                <h:commandLink styleClass="waves-effect waves-light btn blue darken-1"  
+                                               actionListener="#{cadastroAmbienteBean.salvar()}">
+                                    <i class="material-icons left">
+                                        done</i>Salvar</h:commandLink>
+                                <h:inputHidden id="hidden" class="hidden" value="#{cadastroAmbienteBean.mensagem}" />
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

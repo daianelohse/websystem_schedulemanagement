@@ -1,0 +1,477 @@
+<ui:composition template="/template.xhtml"  xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html" 
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough" 
+                xmlns:jsf="http://xmlns.jcp.org/jsf"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <ui:define name="corpo">
+        <style>
+            #sem1, #sem2, #sem3, #sem4, #sem5,
+            #sem6, #sem7, #sem8, #sem9, 
+            #sem10 {
+                display: none;
+            }
+
+            #menAddSem {
+                margin-left: 6px;
+                display: none;
+                color: red;
+            }
+
+            #menAddSem .material-icons {
+                font-size: 15px !important;
+            }
+        </style>
+        <div id="cadastroCurso" class="container">
+            <h:form>
+                <div class="row">
+                    <div class="col s12">
+                        <h4 class="blue-text darken-1">Cadastro de Curso</h4>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s9">
+                        <h:inputText id="nome" value="#{cadastroCursoBean.curso.nome}"/>
+                        <label for="nome">Nome</label>
+                    </div>
+                    <div class="input-field col s2">
+                        <h:inputText id="sigla" value="#{cadastroCursoBean.curso.sigla}"
+                                     pt:maxLength="7"/>
+                        <label for="nome">Sigla</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s12 m8 l8" id="modalidade">
+                        <h:selectOneMenu converter="modalidadeConverter"
+                                         value="#{cadastroCursoBean.modalidade}"
+                                         styleClass="browser-default"
+                                         onchange="habilitarAddSemestre()"
+                                         >
+                            <f:selectItem itemValue="#{null}" itemLabel="Selecione a modalidade" noSelectionOption="true" />
+                            <f:selectItems value="#{cadastroCursoBean.modalidades}"
+                                           var="modalidade"
+                                           itemLabel="#{modalidade.nome}"
+                                           itemValue="#{modalidade}"/>
+                            <f:ajax render="ucs1 ucs2 ucs3 ucs4 ucs5
+                                    ucs6 ucs7 ucs8 ucs9 ucs10" execute="@this" 
+                                    event="change"
+                                    listener="#{cadastroCursoBean.limparTodasUcs()}"/>
+                        </h:selectOneMenu>
+                    </div>
+                </div>
+
+                <br/>
+                <br/>
+                <div class="row">
+                    <div class="col s4">
+                        <h5 class="blue-text darken-1">Unidades Curriculares</h5>
+
+                    </div>
+                    <div class="col s2 btAdicionarSemestre">
+                        <a id="btAdicionarSemestre"
+                           onclick="addSemestre()"
+                           class="btn-floating waves-effect waves-light red disabled"
+                           >
+                            <i class="material-icons">add</i>
+                        </a>
+                    </div>
+
+                    <span id="menAddSem">
+                        <span class="material-icons">error</span>
+                        Limite de semestres atingido.</span>
+                </div>
+                <div id="semestres">
+                    <div class="row" id="sem1">
+                        <div class="col s2">
+                            <p>1º Semestre</p>
+                        </div>
+                        <div class="col s2 offset-s12">
+                            <a id="btFecharUc1"
+                               onclick="fecharUc(1)"
+                               class="btn-floating waves-effect waves-light red">
+                                <i class="material-icons">remove</i>
+                            </a>
+                        </div>
+                        <br/>
+                        <div class="input-field">
+                            <h:outputLabel for="themes" value="Unidades Curriculares:"/><br />
+                            <!-- começa input autocomplete -->
+
+                            <p:growl id="msgs1" showDetail="true" />
+
+                            <h:panelGrid columns="2" cellpadding="5">
+                                <!-- completeMethod = receber o texto que está digitanto e enviar uma lista-->
+                                <p:autoComplete var="uc" 
+                                                id="ucs1" multiple="true" value="#{cadastroCursoBean.UCSelecionadas1}"
+                                                completeMethod="#{cadastroCursoBean.procurarUnidadesCurriculares}" 
+                                                itemLabel="#{uc.nome}"
+                                                itemValue="#{uc}" 
+                                                effectDuration="30"
+                                                maxResults="10"
+                                                converter="unidadeCurricularConverter"
+                                                emptyMessage="Nenhuma unidade curricular encontrada"
+                                                forceSelection="true">
+                                    <p:ajax event="itemUnselect"  listener="#{cadastroCursoBean.removerUCSelecionado}" update="ucs1"/> 
+
+                                    <p:ajax event="itemSelect" listener="#{cadastroCursoBean.UCSelecionado}" update="ucs1" />  
+                                    <h:outputText class="ss1" id="ss1" value="#{uc.nome}"/>
+                                </p:autoComplete>
+                            </h:panelGrid>
+                            <!-- termina input autocomplete-->
+                        </div>
+                    </div>
+                    <div class="row" id="sem2">
+                        <div class="col s2">
+                            <p>2º Semestre</p>
+                        </div>
+                        <div class="col s2 offset-s12">
+                            <a id="btFecharUc2"
+                               onclick="fecharUc(2)"
+                               class="btn-floating waves-effect waves-light red">
+                                <i class="material-icons">remove</i>
+                            </a>
+                        </div>
+                        <br/>
+                        <div class="input-field">
+                            <h:outputLabel for="themes" value="Unidades Curriculares:"/><br />
+                            <!-- começa input autocomplete -->
+                            <p:growl id="msgs2" showDetail="true" />
+                            <h:panelGrid columns="2" cellpadding="5">
+                                <!-- completeMethod = receber o texto que está digitanto e enviar uma lista-->
+                                <p:autoComplete var="uc" 
+                                                id="ucs2" multiple="true" value="#{cadastroCursoBean.UCSelecionadas2}"
+                                                completeMethod="#{cadastroCursoBean.procurarUnidadesCurriculares}" 
+                                                itemLabel="#{uc.nome}"
+                                                itemValue="#{uc}" 
+                                                effectDuration="30"
+                                                maxResults="10"
+                                                converter="unidadeCurricularConverter"
+                                                emptyMessage="Nenhuma unidade curricular encontrada"
+                                                forceSelection="true">
+                                    <p:ajax event="itemUnselect" listener="#{cadastroCursoBean.removerUCSelecionado}" 
+                                            update="ucs2" />
+                                    <p:ajax event="itemSelect" listener="#{cadastroCursoBean.UCSelecionado}" update="ucs2" />  
+                                    <h:outputText value="#{uc.nome}"/>
+                                </p:autoComplete>
+                            </h:panelGrid>
+                            <!-- termina input autocomplete-->
+                        </div>
+                    </div>
+                    <div class="row" id="sem3">
+                        <div class="col s2">
+                            <p>3º Semestre</p>
+                        </div>
+                        <div class="col s2 offset-s12">
+                            <a id="btFecharUc3"
+                               onclick="fecharUc(3)"
+                               class="btn-floating waves-effect waves-light red">
+                                <i class="material-icons">remove</i>
+                            </a>
+                        </div>
+                        <br/>
+                        <div class="input-field">
+                            <h:outputLabel for="themes" value="Unidades Curriculares:"/><br />
+                            <!-- começa input autocomplete -->
+                            <p:growl id="msgs3" showDetail="true" />
+                            <h:panelGrid columns="2" cellpadding="5">
+                                <!-- completeMethod = receber o texto que está digitanto e enviar uma lista-->
+                                <p:autoComplete var="uc" 
+                                                id="ucs3" multiple="true" value="#{cadastroCursoBean.UCSelecionadas3}"
+                                                completeMethod="#{cadastroCursoBean.procurarUnidadesCurriculares}" 
+                                                itemLabel="#{uc.nome}"
+                                                itemValue="#{uc}" 
+                                                effectDuration="30"
+                                                maxResults="10"
+                                                converter="unidadeCurricularConverter"
+                                                emptyMessage="Nenhuma unidade curricular encontrada"
+                                                forceSelection="true">
+                                    <p:ajax event="itemUnselect" listener="#{cadastroCursoBean.removerUCSelecionado}" 
+                                            update="ucs3" />
+                                    <p:ajax event="itemSelect" listener="#{cadastroCursoBean.UCSelecionado}" update="ucs3" />  
+                                    <h:outputText value="#{uc.nome}"/>
+                                </p:autoComplete>
+                            </h:panelGrid>
+                            <!-- termina input autocomplete-->
+                        </div>
+                    </div>
+                    <div class="row" id="sem4">
+                        <div class="col s2">
+                            <p>4º Semestre</p>
+                        </div>
+                        <div class="col s2 offset-s12">
+                            <a id="btFecharUc4"
+                               onclick="fecharUc(4)"
+                               class="btn-floating waves-effect waves-light red">
+                                <i class="material-icons">remove</i>
+                            </a>
+                        </div>
+                        <br/>
+                        <div class="input-field">
+                            <h:outputLabel for="themes" value="Unidades Curriculares:"/><br />
+                            <!-- começa input autocomplete -->
+                            <p:growl id="msgs4" showDetail="true" />
+                            <h:panelGrid columns="2" cellpadding="5">
+                                <!-- completeMethod = receber o texto que está digitanto e enviar uma lista-->
+                                <p:autoComplete var="uc" 
+                                                id="ucs4" multiple="true" value="#{cadastroCursoBean.UCSelecionadas4}"
+                                                completeMethod="#{cadastroCursoBean.procurarUnidadesCurriculares}" 
+                                                itemLabel="#{uc.nome}"
+                                                itemValue="#{uc}" 
+                                                effectDuration="30"
+                                                maxResults="10"
+                                                converter="unidadeCurricularConverter"
+                                                emptyMessage="Nenhuma unidade curricular encontrada"
+                                                forceSelection="true">
+                                    <p:ajax event="itemUnselect" listener="#{cadastroCursoBean.removerUCSelecionado}" 
+                                            update="ucs4" />
+                                    <p:ajax event="itemSelect" listener="#{cadastroCursoBean.UCSelecionado}" update="ucs4" />  
+                                    <h:outputText value="#{uc.nome}"/>
+                                </p:autoComplete>
+                            </h:panelGrid>
+                            <!-- termina input autocomplete-->
+                        </div>
+                    </div>
+                    <div class="row" id="sem5">
+                        <div class="col s2">
+                            <p>5º Semestre</p>
+                        </div>
+                        <div class="col s2 offset-s12">
+                            <a id="btFecharUc5"
+                               onclick="fecharUc(5)"
+                               class="btn-floating waves-effect waves-light red">
+                                <i class="material-icons">remove</i>
+                            </a>
+                        </div>
+                        <br/>
+                        <div class="input-field">
+                            <h:outputLabel for="themes" value="Unidades Curriculares:"/><br />
+                            <!-- começa input autocomplete -->
+                            <p:growl id="msgs5" showDetail="true" />
+                            <h:panelGrid columns="2" cellpadding="5">
+                                <!-- completeMethod = receber o texto que está digitanto e enviar uma lista-->
+                                <p:autoComplete var="uc" 
+                                                id="ucs5" multiple="true" value="#{cadastroCursoBean.UCSelecionadas5}"
+                                                completeMethod="#{cadastroCursoBean.procurarUnidadesCurriculares}" 
+                                                itemLabel="#{uc.nome}"
+                                                itemValue="#{uc}" 
+                                                effectDuration="30"
+                                                maxResults="10"
+                                                converter="unidadeCurricularConverter"
+                                                emptyMessage="Nenhuma unidade curricular encontrada"
+                                                forceSelection="true">
+                                    <p:ajax event="itemUnselect" listener="#{cadastroCursoBean.removerUCSelecionado}" 
+                                            update="ucs5" />
+                                    <p:ajax event="itemSelect" listener="#{cadastroCursoBean.UCSelecionado}" update="ucs5" />  
+                                    <h:outputText value="#{uc.nome}"/>
+                                </p:autoComplete>
+                            </h:panelGrid>
+                            <!-- termina input autocomplete-->
+                        </div>
+                    </div>
+                    <div class="row" id="sem6">
+                        <div class="col s2">
+                            <p>6º Semestre</p>
+                        </div>
+                        <div class="col s2 offset-s12">
+                            <a id="btFecharUc6"
+                               onclick="fecharUc(6)"
+                               class="btn-floating waves-effect waves-light red">
+                                <i class="material-icons">remove</i>
+                            </a>
+                        </div>
+                        <br/>
+                        <div class="input-field">
+                            <h:outputLabel for="themes" value="Unidades Curriculares:"/><br />
+                            <!-- começa input autocomplete -->
+                            <p:growl id="msgs6" showDetail="true" />
+                            <h:panelGrid columns="2" cellpadding="5">
+                                <!-- completeMethod = receber o texto que está digitanto e enviar uma lista-->
+                                <p:autoComplete var="uc" 
+                                                id="ucs6" multiple="true" value="#{cadastroCursoBean.UCSelecionadas6}"
+                                                completeMethod="#{cadastroCursoBean.procurarUnidadesCurriculares}" 
+                                                itemLabel="#{uc.nome}"
+                                                itemValue="#{uc}" 
+                                                effectDuration="30"
+                                                maxResults="10"
+                                                converter="unidadeCurricularConverter"
+                                                emptyMessage="Nenhuma unidade curricular encontrada"
+                                                forceSelection="true">
+                                    <p:ajax event="itemUnselect" listener="#{cadastroCursoBean.removerUCSelecionado}" 
+                                            update="ucs6" />
+                                    <p:ajax event="itemSelect" listener="#{cadastroCursoBean.UCSelecionado}" update="ucs6" />  
+                                    <h:outputText value="#{uc.nome}"/>
+                                </p:autoComplete>
+                            </h:panelGrid>
+                            <!-- termina input autocomplete-->
+                        </div>
+                    </div>
+
+                    <div class="row" id="sem7">
+                        <div class="col s2">
+                            <p>7º Semestre</p>
+                        </div>
+                        <div class="col s2 offset-s12">
+                            <a id="btFecharUc7"
+                               onclick="fecharUc(7)"
+                               class="btn-floating waves-effect waves-light red">
+                                <i class="material-icons">remove</i>
+                            </a>
+                        </div>
+                        <br/>
+                        <div class="input-field">
+                            <h:outputLabel for="themes" value="Unidades Curriculares:"/><br />
+                            <!-- começa input autocomplete -->
+                            <p:growl id="msgs7" showDetail="true" />
+                            <h:panelGrid columns="2" cellpadding="5">
+                                <!-- completeMethod = receber o texto que está digitanto e enviar uma lista-->
+                                <p:autoComplete var="uc" 
+                                                id="ucs7" multiple="true" value="#{cadastroCursoBean.UCSelecionadas7}"
+                                                completeMethod="#{cadastroCursoBean.procurarUnidadesCurriculares}" 
+                                                itemLabel="#{uc.nome}"
+                                                itemValue="#{uc}" 
+                                                effectDuration="30"
+                                                maxResults="10"
+                                                converter="unidadeCurricularConverter"
+                                                emptyMessage="Nenhuma unidade curricular encontrada"
+                                                forceSelection="true">
+                                    <p:ajax event="itemUnselect" listener="#{cadastroCursoBean.removerUCSelecionado}" 
+                                            update="ucs7" />
+                                    <p:ajax event="itemSelect" listener="#{cadastroCursoBean.UCSelecionado}" update="ucs7" />  
+                                    <h:outputText value="#{uc.nome}"/>
+                                </p:autoComplete>
+                            </h:panelGrid>
+                            <!-- termina input autocomplete-->
+                        </div>
+                    </div>
+
+                    <div class="row" id="sem8">
+                        <div class="col s2">
+                            <p>8º Semestre</p>
+                        </div>
+                        <div class="col s2 offset-s12">
+                            <a id="btFecharUc8"
+                               onclick="fecharUc(8)"
+                               class="btn-floating waves-effect waves-light red">
+                                <i class="material-icons">remove</i>
+                            </a>
+                        </div>
+                        <br/>
+                        <div class="input-field">
+                            <h:outputLabel for="themes" value="Unidades Curriculares:"/><br />
+                            <!-- começa input autocomplete -->
+                            <p:growl id="msgs8" showDetail="true" />
+                            <h:panelGrid columns="2" cellpadding="5">
+                                <!-- completeMethod = receber o texto que está digitanto e enviar uma lista-->
+                                <p:autoComplete var="uc" 
+                                                id="ucs8" multiple="true" value="#{cadastroCursoBean.UCSelecionadas8}"
+                                                completeMethod="#{cadastroCursoBean.procurarUnidadesCurriculares}" 
+                                                itemLabel="#{uc.nome}"
+                                                itemValue="#{uc}" 
+                                                effectDuration="30"
+                                                maxResults="10"
+                                                converter="unidadeCurricularConverter"
+                                                emptyMessage="Nenhuma unidade curricular encontrada"
+                                                forceSelection="true">
+                                    <p:ajax event="itemUnselect" listener="#{cadastroCursoBean.removerUCSelecionado}" 
+                                            update="ucs8" />
+                                    <p:ajax event="itemSelect" listener="#{cadastroCursoBean.UCSelecionado}" update="ucs8" />  
+                                    <h:outputText value="#{uc.nome}"/>
+                                </p:autoComplete>
+                            </h:panelGrid>
+                            <!-- termina input autocomplete-->
+                        </div>
+                    </div>
+
+                    <div class="row" id="sem9">
+                        <div class="col s2">
+                            <p>9º Semestre</p>
+                        </div>
+                        <div class="col s2 offset-s12">
+                            <a id="btFecharUc9"
+                               onclick="fecharUc(9)"
+                               class="btn-floating waves-effect waves-light red">
+                                <i class="material-icons">remove</i>
+                            </a>
+                        </div>
+                        <br/>
+                        <div class="input-field">
+                            <h:outputLabel for="themes" value="Unidades Curriculares:"/><br />
+                            <!-- começa input autocomplete -->
+                            <p:growl id="msgs9" showDetail="true" />
+                            <h:panelGrid columns="2" cellpadding="5">
+                                <!-- completeMethod = receber o texto que está digitanto e enviar uma lista-->
+                                <p:autoComplete var="uc" 
+                                                id="ucs9" multiple="true" value="#{cadastroCursoBean.UCSelecionadas9}"
+                                                completeMethod="#{cadastroCursoBean.procurarUnidadesCurriculares}" 
+                                                itemLabel="#{uc.nome}"
+                                                itemValue="#{uc}" 
+                                                effectDuration="30"
+                                                maxResults="10"
+                                                converter="unidadeCurricularConverter"
+                                                emptyMessage="Nenhuma unidade curricular encontrada"
+                                                forceSelection="true">
+                                    <p:ajax event="itemUnselect" listener="#{cadastroCursoBean.removerUCSelecionado}" 
+                                            update="ucs9" />
+                                    <p:ajax event="itemSelect" listener="#{cadastroCursoBean.UCSelecionado}" update="ucs9" />  
+                                    <h:outputText value="#{uc.nome}"/>
+                                </p:autoComplete>
+                            </h:panelGrid>
+                            <!-- termina input autocomplete-->
+                        </div>
+                    </div>
+
+                    <div class="row" id="sem10">
+                        <div class="col s2">
+                            <p>10º Semestre</p>
+                        </div>
+                        <div class="col s2 offset-s12">
+                            <a id="btFecharUc10"
+                               onclick="fecharUc(10)"
+                               class="btn-floating waves-effect waves-light red">
+                                <i class="material-icons">remove</i>
+                            </a>
+                        </div>
+                        <br/>
+                        <div class="input-field">
+                            <h:outputLabel for="themes" value="Unidades Curriculares:"/><br />
+                            <!-- começa input autocomplete -->
+                            <p:growl id="msgs10" showDetail="true" />
+                            <h:panelGrid columns="2" cellpadding="5">
+                                <!-- completeMethod = receber o texto que está digitanto e enviar uma lista-->
+                                <p:autoComplete var="uc" 
+                                                id="ucs10" multiple="true" value="#{cadastroCursoBean.UCSelecionadas10}"
+                                                completeMethod="#{cadastroCursoBean.procurarUnidadesCurriculares}" 
+                                                itemLabel="#{uc.nome}"
+                                                itemValue="#{uc}" 
+                                                effectDuration="30"
+                                                maxResults="10"
+                                                converter="unidadeCurricularConverter"
+                                                emptyMessage="Nenhuma unidade curricular encontrada"
+                                                forceSelection="true">
+                                    <p:ajax event="itemUnselect" listener="#{cadastroCursoBean.removerUCSelecionado}" 
+                                            update="ucs10" />
+                                    <p:ajax event="itemSelect" listener="#{cadastroCursoBean.UCSelecionado}" update="ucs10" />  
+                                    <h:outputText value="#{uc.nome}"/>
+                                </p:autoComplete>
+                            </h:panelGrid>
+                            <!-- termina input autocomplete-->
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row" id="botoes">
+                    <div class="col s6 m8 l9 right-align">
+                        <h:commandLink styleClass="waves-effect waves-light btn  teal darken-1"
+                                       action="listagemCurso.jsf?faces-redirect=true">
+                            <i class="material-icons left">keyboard_backspace</i>Voltar</h:commandLink>
+                    </div>
+                    <div class="col s6 m4 l3 right-align">
+                        <h:commandLink action="#{cadastroCursoBean.salvar()}" styleClass="waves-effect waves-light btn blue darken-1">
+                            <i class="material-icons left">done</i>Salvar</h:commandLink>
+                    </div>
+                </div> 
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,55 @@
+<ui:composition template="/template.xhtml"  xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html" 
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough" 
+                xmlns:jsf="http://xmlns.jcp.org/jsf"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <ui:define name="corpo">
+        <h:form>
+            <div class="container">
+                <div class="row">
+                    <div class="col s12">
+                        <h4 class="blue-text"> Relatório de Ambientes - Ocupação</h4>
+                    </div>
+                </div>
+                <div class="row"><br/><br/>
+                    <div class="col s2 offset-s1">
+                        <label for="data">Data de Início</label>
+                        <h:inputText pt:type="date" styleClass="datepicker" id="data"
+                                     value="#{relatorioReservaAmbienteBean.dataInicial}"
+                                     converter="dataConverter">
+                            <f:ajax render="btGerarCalendario mensagemDataInvalida" 
+                                    execute="@this"
+                                    listener="#{relatorioReservaAmbienteBean.habilitarGerarCalendario()}"/>
+                        </h:inputText>
+                    </div>
+                    <div class="col s2">
+                        <label for="dataFinal">Data de Fim</label>
+                        <h:inputText pt:type="date" styleClass="datepicker" id="dataFinal"
+                                     value="#{relatorioReservaAmbienteBean.dataFinal}"
+                                     converter="dataConverter">
+                            <f:ajax render="btGerarCalendario mensagemDataInvalida" 
+                                    execute="@this"
+                                    listener="#{relatorioReservaAmbienteBean.habilitarGerarCalendario()}"/>
+                        </h:inputText>
+                    </div>
+                    <div class="col s2">
+                        <h:commandLink id="btGerarCalendario"
+                                       styleClass="waves-effect waves-light btn blue darken-3 #{relatorioReservaAmbienteBean.disabledBtCalendario}"
+                                       value="Gerar Relatório"
+                                       actionListener="#{relatorioReservaAmbienteBean.gerarRelatorio()}">
+                        </h:commandLink>
+                    </div>
+                    <div class="col s12 offset-s1">
+                        <h6>
+                            <h:outputText id="mensagemDataInvalida"
+                                          class="red-text" 
+                                          value="#{relatorioReservaAmbienteBean.mensagemDataInvalida}"/>
+                        </h6>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
+

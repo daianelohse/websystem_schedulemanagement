@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"  xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" 
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>SGH - Sistema Gerenciador de Horários</title>
+        
+        <h:outputStylesheet library="materialize/css" name="materialize.css"/>
+        <h:outputStylesheet library="sgh/css" name="menu.css"/>
+        <h:outputStylesheet library="datatables" name="datatables.css"/>
+        <h:outputStylesheet library="sgh/css" name="cadastroAmbiente.css"/>
+        <h:outputStylesheet library="sgh/css" name="cadastroColaborador.css"/>
+        <h:outputStylesheet library="sgh/css" name="cadastroCurso.css"/>
+        <h:outputStylesheet library="sgh/css" name="construcaoHorario.css"/>
+        <h:outputStylesheet library="sgh/css" name="geral.css"/>
+        <h:outputStylesheet library="sgh/css" name="realizarReserva.css"/>
+        <h:outputStylesheet library="sgh/css" name="recuperar_senha.css"/>
+        <h:outputStylesheet library="sgh/css" name="visualizacaoReserva.css"/>
+        
+        <link type="text/css" href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"></link>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta charset="utf-8" />
+        <h:outputScript library="materialize/js" name="jquery-ui.min.js"/>
+        <h:outputScript library="materialize/js" name="jquery.mask.min.js"/>
+        <h:outputScript library="materialize/js" name="materialize.js"/>
+        <h:outputScript library="datatables" name="datatables.js"/>
+        <h:outputScript library="sgh/js" name="evCadastroColaborador.js"/>
+        <h:outputScript library="sgh/js" name="evCadAmbiente.js"/>
+        <h:outputScript library="sgh/js" name="menu.js"/>
+        
+        <!-- listagem ambientes -->
+        <h:outputScript library="sgh/js" name="listagemAmbiente.js"></h:outputScript>
+        
+        
+        <!-- cad colaborador -->
+        <h:outputScript library="materialize/js" name="materialize.js"></h:outputScript>
+        <h:outputScript library="sgh/js" name="evCadastroColaborador.js"></h:outputScript>
+        
+        <!-- cad curso -->
+         <h:outputScript library="materialize/js" name="materialize.js"></h:outputScript>
+        <h:outputScript library="sgh/js" name="evCadastroCurso.js"></h:outputScript>
+        
+        <h:outputScript library="sgh/js" name="listagemColaboradores.js"></h:outputScript>
+        
+        <h:outputScript library="sgh/js" name="listagemCurso.js"></h:outputScript>
+        
+        <h:outputScript library="sgh/js" name="listagemTurma.js"></h:outputScript>
+        
+        <h:outputScript library="sgh/js" name="evCadTurma.js"></h:outputScript>
+        
+        <h:outputScript library="sgh/js" name="listagemUC.js"></h:outputScript>
+        
+        <h:outputScript library="sgh/js" name="controleReserva.js"></h:outputScript>
+        <h:outputScript library="sgh/js" name="evConstrucaoHorario.js"></h:outputScript>
+        <h:outputScript library="sgh/js" name="minhasReserva.js"></h:outputScript>
+        <h:outputScript library="sgh/js" name="evRealizarReserva.js"></h:outputScript>
+   
+    </h:head>
+    <h:body>
+        <h:form>
+            <p:inputText rendered="false"/>
+        </h:form>
+        <div id="page">
+            <div id="header-container">
+                <div id="header">
+                    <ui:include src="/menu.xhtml"/>
+                     
+                </div>
+            </div>
+            <div id="content-container">
+                <div id="content">
+                    <ui:insert name="corpo">
+                        
+                    </ui:insert>
+                </div>
+            </div>
+            <div id="content-container">
+                <div style="margin-top:80px;" id="content">
+                    <footer style="text-align: center; border-top: 1px solid #ddd;bottom: 0;color: #737373;padding: 5px;position: fixed; background-color: #fff; width: 100%;">
+                        SENAI 2015
+                    </footer>
+                </div>
+            </div>
+        </div>
+    </h:body>
+</html>

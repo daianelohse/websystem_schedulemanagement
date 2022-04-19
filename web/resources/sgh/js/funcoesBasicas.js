@@ -1,0 +1,45 @@
+$(document).ready(function() {
+    $('select').material_select();
+});
+
+
+var submitou = false;
+
+$(function() {
+
+    var texto = $(".btCadAmbiente input[type=hidden]").val();
+    console.log(texto);
+
+
+    if (texto == "Sucesso") {
+        Materialize.toast("Ambiente salvo com sucesso", 4000);
+        $(".toast").css("background-color", "green");
+    } else if (texto == "Erro") {
+        Materialize.toast("Ocorreu um erro ao salvar o ambiente! Contate o administrador do sistema!", 4000);
+        $(".toast").css("background-color", "red");
+    } else{
+        Materialize.toast(texto, 4000);
+       
+    }
+
+});
+
+function isNumber(event) {
+    if (event) {
+        var charCode = (event.which) ? event.which : event.keyCode;
+        console.log(charCode);
+        if (charCode >= 48 && charCode <= 57) {
+            return true;
+        }
+
+        if (charCode >= 96 && charCode <= 105) {
+            return true;
+        }
+        if (charCode === 8 || charCode === 9) {
+
+            return true;
+        }
+        return false;
+    }
+    return false;
+}

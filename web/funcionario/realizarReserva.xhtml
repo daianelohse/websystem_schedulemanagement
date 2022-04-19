@@ -1,0 +1,140 @@
+<ui:composition template="/template.xhtml"  xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html" 
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough" 
+                xmlns:jsf="http://xmlns.jcp.org/jsf"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="corpo">
+        <div id="realizarReserva" class="container">
+            <h:form id="form">
+                <div class="row">
+                    <div class="col s12">
+                        <h4 class="blue-text darken-1">Realizar reserva</h4>
+                    </div>
+                </div>
+
+
+                <div class="row">
+
+                    <div class="row">
+                        <div class="col s11 offset-s1">
+                            <div class="row">
+                                <div class="input-field col s11 m11 l11">
+                                    <label for="titulo">Evento</label>
+                                    <h:inputText id="titulo" value="#{realizarReservaBean.reserva.nome}">
+                                    </h:inputText>
+                                </div>  
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s11">
+                                    <h:inputTextarea id="desc" styleClass="materialize-textarea" value="#{realizarReservaBean.reserva.descricao}"/>
+                                    <label for="desc">Descrição</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div id="comboLocal" class="input-field col s5 m5 l5 offset-s1 offset-m1 offset-l1 right-align">
+                            <h:selectOneMenu required="true" converter="localConverter" value="#{realizarReservaBean.localizacaoSelecionada}" 
+                                             styleClass="browser-default">
+                                <f:selectItem itemLabel="Selecione uma localização" itemValue="null"/> 
+                                <f:selectItems value="#{realizarReservaBean.localizacoes}"
+                                               var="localizacao"
+                                               itemLabel="#{localizacao.nome}"
+                                               itemValue="#{localizacao}">
+                                </f:selectItems>
+                                <f:ajax event="change" execute="@this" render="ambientesLivres data tipoAmbiente horariosCheck" listener="#{realizarReservaBean.atualizarComboTipoAmbiente()}"/>
+                            </h:selectOneMenu>
+                        </div>
+                        <div id="comboTipoAmb" class="input-field col s5 m5 l5 center-align">
+                            <h:selectOneMenu converter="tipoAmbiente" id="tipoAmbiente" class="browser-default" 
+                                             value="#{realizarReservaBean.tipoAmbienteSelecionado}">
+                                <f:selectItem itemLabel="Selecione um tipo de ambiente" itemValue=""/>
+                                <f:selectItems value="#{realizarReservaBean.tiposAmbiente}"
+                                               var="tipoAmbiente"
+                                               itemValue="#{tipoAmbiente}"
+                                               itemLabel="#{tipoAmbiente.nome}" >
+                                </f:selectItems>
+                                <f:ajax render="ambientesLivres" execute="@this" event="change" listener="#{realizarReservaBean.buscarAmbientesLivres()}"/>
+                            </h:selectOneMenu> 
+                        </div>
+                    </div>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <div class="row">
+                        <div class="col s11 offset-s1">
+                            <div class="col s4">
+                                <div class="row">
+                                    <div id="inputData" class="col s12">
+                                        <label for="data">Data</label>
+                                        <h:inputText styleClass="datepicker" id="data"
+                                                     value="#{realizarReservaBean.dataReserva}"
+                                                     converter="dataConverter">
+                                            <f:ajax render="ambientesLivres" execute="@this" event="change"
+                                                    listener="#{realizarReservaBean.buscarAmbientesLivres()}"/>
+                                        </h:inputText>
+                                    </div> 
+                                </div>
+                                <div class="row">
+                                    <span><b>Horário da Reserva</b></span>
+                                </div>
+                                <div id="inputHorarios">
+                                    <h:panelGroup id="horariosCheck">
+                                        <c:forEach items="#{realizarReservaBean.horariosSelecionados.keySet()}"
+                                                   var="horarioAula">
+                                            <div class="row">
+                                                <div class="col s12">
+                                                    <h:selectBooleanCheckbox id="#{horarioAula}" 
+                                                                             value="#{realizarReservaBean.horariosSelecionados[horarioAula]}">
+                                                        <f:ajax event="change" execute="@this" listener="#{realizarReservaBean.buscarAmbientesLivres()}"  render="ambientesLivres"/> 
+                                                    </h:selectBooleanCheckbox>
+                                                    <h:outputLabel for="#{horarioAula}" value="#{horarioAula.descricao}"/>
+                                                </div> 
+                                            </div>
+                                        </c:forEach>
+                                    </h:panelGroup>
+                                </div>
+                            </div>
+
+                            <div id="listaSalas" class="col s7">
+                                <!-- COLOCAR COMBO PARA FILTRAR TIPOS DE LABORATÓRIOS -->
+                                <div class="row">
+                                    <h5 class="blue-text"> Ambientes disponíveis</h5>
+                                </div>
+
+                                <div class="row">
+                                    <div>
+                                        <h:panelGroup id="ambientesLivres">
+                                            <div id="lista" class="collection">
+                                                <c:forEach items="#{realizarReservaBean.ambientes}" var="ambiente">
+                                                    <h:commandLink onclick="selecionarAmbiente(this)" hreflang="#!" styleClass="collection-item" value="#{ambiente.sigla}">
+                                                        <f:ajax event="click" listener="#{realizarReservaBean.reserva.setAmbiente(ambiente)}" />
+                                                    </h:commandLink>
+
+                                                </c:forEach> </div>
+                                        </h:panelGroup>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s10 offset-s1 right-align btSalvarReserva">
+                            <h:commandLink id="btSalvarReservaUnica" 
+                                           styleClass="waves-effect waves-light btn blue darken-1"
+                                           action="#{realizarReservaBean.addReserva()}">
+                                <i class="material-icons left">check</i>Salvar esta reserva
+                            </h:commandLink>
+                            <h:inputHidden id="hidden" class="hidden" value="#{realizarReservaBean.mensagem}" />
+                        </div>
+                    </div>
+                </div>
+
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>
+

@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>SGH - Sistema Gerenciador de Horários</title>
+        <h:outputStylesheet library="materialize/css" name="materialize.css"/>
+        <link type="text/css" href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"></link>
+        <h:outputStylesheet library="sgh/css" name="login.css"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta charset="utf-8" />
+    </h:head>
+    <h:body>
+        <div id="login" class="container">
+            <div id="logoLogin" class="row left caixasLogin">
+                <h3> <span class="fonteEstilizada">s</span>istema de<br /> <span class="fonteEstilizada">g</span>erenciamento de<br /> <span class="fonteEstilizada">h</span>orários </h3>
+            </div>
+            
+            <h:messages style="display: none"/>
+            <div class="row right caixasLogin">
+                <form action="j_spring_security_check" method="post">
+                    <div class="col s7">
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <i class="material-icons prefix">account_circle</i>
+                               <!-- <h:inputText value="#{loginBean.usuario}" id="user"></h:inputText> -->
+                                <h:inputText id="j_username" />
+                                <h:outputLabel for="user" value="Usuário"/>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <i class="material-icons prefix">lock</i>
+                                <h:inputSecret id="j_password" />
+                                <h:outputLabel for="senha" value="Senha"/>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div id="esqueciSenha"  class="col s6">
+                                <a href="recuperar_senha.jsf">Esqueci minha senha</a>
+                            </div> 
+                            <div id="logar" class="right-align col s6">
+                                <button  type="submit" class="waves-effect waves-light btn">Entrar</button>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <h3 class="right-align">
+                                <span class="red-text flow-text">#{loginBean.mensagem}</span>
+                            </h3>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <h:outputScript library="materialize/js" name="jquery-2.1.4.min.js"></h:outputScript>
+        <h:outputScript library="materialize/js" name="materialize.min.js"></h:outputScript>
+    </h:body>
+</html>
+

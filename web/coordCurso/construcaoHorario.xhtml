@@ -1,0 +1,352 @@
+<ui:composition template="/template.xhtml"  xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html" 
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough" 
+                xmlns:jsf="http://xmlns.jcp.org/jsf"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <ui:define name="corpo">
+        <script>
+            var diaAntSel = null;
+            function abreModalDia(dia) {
+                if (diaAntSel !== null) {
+                    $('#' + diaAntSel).removeClass("grey lighten-2");
+                }
+                diaAntSel = dia;
+                $('#' + dia).addClass("grey lighten-2");
+                $("#tituloDiaSelecionado").html($("#dia" + dia).attr("title"));
+                $(".diaHorario").val($("#tituloDiaSelecionado").html());
+                 $(".diaHorario").hide();
+
+                $('#modal1').openModal();
+                $("#diaHorario").val(dia);
+                document.getElementById("formModal:indexDiaSelecionado").value = dia;
+            }
+
+            $(function () {
+                $("#horarioOpcional").hide();
+            });
+
+            var horararioOpcional = false;
+            function dividirHorario() {
+                if (!horararioOpcional) {
+                    $("#horarioOpcional").show();
+                    horararioOpcional = true;
+                } else {
+                    $("#horarioOpcional").hide();
+                    horararioOpcional = false;
+                }
+            }
+
+            function escolherModalidade() {
+                $("#modalidade").html($("#selecionarMod option").val());
+            }
+
+            function buscarTurmas() {
+                //Fecha "buscar turmas"
+                $("#collapsible li:first-child").removeClass("active");
+                $("#collapsible li:first-child .collapsible-body").slideUp();
+
+                //Abre "calendário"
+                $("#collapsible li:last-child").addClass("active");
+                $("#collapsible li:last-child .collapsible-body").slideDown();
+
+            }
+            ;
+
+            function gerarCalendario() {
+                //Fecha "calendário"
+                $("#collapsible li:last-child").removeClass("active");
+                $("#collapsible li:last-child .collapsible-body").slideUp();
+
+            }
+            ;
+
+
+        </script>
+        <style>
+            .divsHorarios {
+                width: 80px;
+                height: 50px;
+            }
+
+            .feriado {
+                font-style: italic;
+            }
+
+            #tabHorario {
+                word-wrap: break-word;
+            }                
+
+            .dataTabHorario {
+                text-transform: uppercase;
+                font-weight: bolder;
+            }
+
+            #tabHorario .modal-trigger {
+                cursor: pointer;
+            }
+            #tabHorario .modal-trigger:hover {
+                background-color: #cccccc;
+            }
+
+        </style>
+
+        <div id="principal">
+            <h:form id="form">
+                <div class="container">
+                    <div class="row">
+                        <ul id="collapsible" class="collapsible" data-collapsible="expandable">
+                            <li>
+                                <div class="collapsible-header">
+                                    <i class="material-icons">#{construcaoHorarioBean.iconBuscarTurma}</i>Buscar horário existente
+                                    <span id="modalidade"></span><span id="curso"></span>
+                                </div>
+                                <div class="collapsible-body">
+                                    <div class="row">
+                                        <br/>
+                                        <br/>
+
+                                        <div id="selecionarMod" class="col s3 m2 l2 offset-s1 offset-m1 offset-l1">
+                                            <h:selectOneMenu value="#{construcaoHorarioBean.modalidadePesquisa}"
+                                                             styleClass="browser-default"
+                                                             onchange="escolherModalidade()"
+                                                             converter="modalidadeConverter">
+                                                <f:selectItem itemLabel="Selecione uma modalidade" itemValue="null"/>
+                                                <f:selectItems value="#{construcaoHorarioBean.modalidadesHabilitadas}"
+                                                               var="modalidadePesquisa"
+                                                               itemValue="#{modalidadePesquisa}"
+                                                               itemLabel="#{modalidadePesquisa.nome}"/>
+                                                <f:ajax execute="@this" render="cursoBuscarTurma" event="change" 
+                                                        listener="#{construcaoHorarioBean.listarCursosHabilitados()}"/>
+                                            </h:selectOneMenu>
+                                        </div>
+                                        <div class="col s2 m5 l2">
+                                            <h:selectOneMenu id="cursoBuscarTurma"
+                                                             value="#{construcaoHorarioBean.cursoEscolhido}"
+                                                             styleClass="browser-default"
+                                                             converter="cursoConverter">
+                                                <f:selectItem itemLabel="Selecione um curso" itemValue="null"/>
+                                                <f:selectItems value="#{construcaoHorarioBean.cursosHabilitados}"
+                                                               var="cursoPesquisa"
+                                                               itemValue="#{cursoPesquisa}"
+                                                               itemLabel="#{cursoPesquisa.nome}"/>
+                                                <f:ajax execute="@this" render="turma" event="change" listener="#{construcaoHorarioBean.listarTurmasHabilitados()}"/>
+                                            </h:selectOneMenu>
+                                        </div>
+                                        <div class="col s2 m2 l2">
+                                            <h:selectOneMenu id="turma"
+                                                             value="#{construcaoHorarioBean.turmaEscolhida}"
+                                                             styleClass="browser-default"
+                                                             converter="turmaConverter">
+                                                <f:selectItem itemLabel="Selecione uma turma" itemValue="null"/>
+                                                <f:selectItems value="#{construcaoHorarioBean.turmasHabilitadas}"
+                                                               var="turmaPesquisa"
+                                                               itemValue="#{turmaPesquisa}"
+                                                               itemLabel="#{turmaPesquisa.sigla}"/>
+                                                
+                                                </h:selectOneMenu>
+                                        </div>
+                                        <div class="col s2">
+                                            <h:selectOneMenu id="semestre"
+                                                             value="#{construcaoHorarioBean.semestre}"
+                                                             styleClass="browser-default">
+                                                <f:selectItem itemLabel="Semestre" itemValue="null"/>
+                                                <f:selectItem itemLabel="1" itemValue="1"/>
+                                                <f:selectItem itemLabel="2" itemValue="2"/>
+                                                <f:selectItem itemLabel="3" itemValue="3"/>
+                                                <f:selectItem itemLabel="4" itemValue="4"/>
+                                                <f:selectItem itemLabel="5" itemValue="5"/>
+                                                <f:selectItem itemLabel="6" itemValue="6"/>
+                                                <f:selectItem itemLabel="7" itemValue="7"/>
+                                                <f:selectItem itemLabel="8" itemValue="8"/>
+                                                <f:selectItem itemLabel="9" itemValue="9"/>
+                                                <f:selectItem itemLabel="10" itemValue="10"/>
+                                                <!-- habilitar buscar -->
+                                                <f:ajax execute="@this" event="change" render="btBuscar" listener="#{construcaoHorarioBean.verificarExistenciaHorario()}"/>
+                                           
+                                            </h:selectOneMenu>
+                                        </div>
+                                        <div class="col s2 m2 l2">
+                                            <h:commandLink id="btBuscar"
+                                                           onclick="buscarTurmas()"
+                                                           styleClass="waves-effect waves-light btn blue darken-3 #{construcaoHorarioBean.disabledBuscar}"
+                                                           value="Buscar"
+                                                           >
+                                                <f:ajax render="@none" execute="@this"/>
+                                            </h:commandLink>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </li>
+                            <li>
+                                <div class="collapsible-header"><i class="material-icons">#{construcaoHorarioBean.iconBuscarTurma}</i>Novo Horário</div>
+                                <div class="collapsible-body">
+                                    <div class="row"><br/><br/>
+                                        <div class="col s2 offset-s1">
+                                            <label for="data">Início</label>
+                                            <h:inputText pt:type="date" styleClass="datepicker" id="data"
+                                                         value="#{construcaoHorarioBean.dataInicial}"
+                                                         converter="dataConverter">
+                                                <f:ajax render="btGerarCalendario mensagemDataInvalida" 
+                                                        execute="@this"
+                                                        listener="#{construcaoHorarioBean.habilitarGerarCalendario()}"/>
+                                            </h:inputText>
+                                        </div>
+                                        <div class="col s2">
+                                            <label for="dataFinal">Fim</label>
+                                            <h:inputText pt:type="date" styleClass="datepicker" id="dataFinal"
+                                                         value="#{construcaoHorarioBean.dataFinal}"
+                                                         converter="dataConverter">
+                                                <f:ajax render="btGerarCalendario mensagemDataInvalida" 
+                                                        execute="@this"
+                                                        listener="#{construcaoHorarioBean.habilitarGerarCalendario()}"/>
+                                            </h:inputText>
+                                        </div>
+
+                                        <div class="col s2">
+                                            <h:commandLink id="btGerarCalendario"
+                                                           onclick="gerarCalendario()"
+                                                           styleClass="waves-effect waves-light btn blue darken-3 #{construcaoHorarioBean.disabledBtCalendario}"
+                                                           value="Criar">
+                                                <f:ajax render="tabelaHorario" execute="@this" event="click"
+                                                        listener="#{construcaoHorarioBean.criarNovoHorario()}"/>
+                                            </h:commandLink>
+                                        </div>
+                                        <div class="col s12 offset-s1">
+                                            <h6>
+                                                <h:outputText id="mensagemDataInvalida"
+                                                              class="red-text" 
+                                                              value="#{construcaoHorarioBean.mensagemDataInvalida}"/>
+                                            </h6>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </li>
+                        </ul>   
+                    </div>
+
+
+                    <div class="divider"></div>
+                    <div class="row">
+                        <div class="col s6">
+                            <h:panelGroup id="tabelaHorario">
+
+                                <table id="tabHorario">
+                                    <ui:repeat value="#{construcaoHorarioBean.dadosTabelaHorario}" var="item"
+                                               varStatus="iterator">
+                                        <!-- Meses à esquerda -->
+                                        <!-- tr é aberta na própria construção do HTML -->
+                                        <ui:fragment rendered="#{(iterator.index) % 6 eq 0}">
+
+                                            <div class="col s1 center-align grey white-text">
+                                                <h:outputText escape="false" value="#{construcaoHorarioBean.meses[iterator.index / 6]}"/>
+                                            </div>
+                                        </ui:fragment>
+                                        <!-- Tabela interada -->
+                                        <div class="col s1">
+                                            <h:outputText escape="false" value="#{item}"/>
+                                        </div>
+                                        <!-- tr é fechada na própria construção do HTML -->
+
+                                    </ui:repeat>
+                                </table>
+                            </h:panelGroup>
+                        </div> 
+
+                        <div class="col s6">
+                            <!-- direita -->
+                            <div class="row">
+                                <div class="col s12">
+                                    <h5></h5>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </h:form>
+            <!-- Modal Structure -->
+            <div id="modal1" class="modal">
+                <h:form id="formModal">
+                    <h:inputHidden value="#{construcaoHorarioBean.indexSelecionado}" id="indexDiaSelecionado" class="indexDiaSelecionado"/>
+
+                    <h:inputText class="diaHorario" value="#{construcaoHorarioBean.dataString}"/>
+
+                    <div class="modal-content">
+                        <h4 id="tituloDiaSelecionado" class="blue-text darken-1"></h4>
+
+                        <!-- UC -->
+                        <div class="row">
+                            <div class="input-field col s9">
+                                <h:inputText id="uc" value="#{construcaoHorarioBean.preReserva.uc}"/>
+                                <label for="nome">Unidade Curricular</label>
+                            </div>
+                        </div>
+                        <!-- PROF -->
+                        <div class="row">
+                            <div class="input-field col s9">
+                                <h:inputText id="prof" value="#{construcaoHorarioBean.preReserva.professor}"/>
+                                <label for="nome">Professor</label>
+                            </div>
+                        </div>
+
+                        <!-- Sala -->
+                        <div class="row">
+                            <div class="input-field col s9">
+                                <h:inputText id="sala" value="#{construcaoHorarioBean.preReserva.sala}"/>
+                                <label for="nome">Sala</label>
+                            </div>
+                        </div>
+                        
+                        <h:selectBooleanCheckbox id="remember" onclick="dividirHorario()" value="#{construcaoHorarioBean.isDividido}"/>
+                        <h:outputLabel value="Dividir" for="remember" />
+
+                    
+                        <div id="horarioOpcional">
+                            <!-- UC -->
+                            <div class="row">
+                                <div class="input-field col s9">
+                                    <h:inputText id="uc1" value="#{construcaoHorarioBean.reservaOpcional.uc}"/>
+                                    <label for="nome">Unidade Curricular</label>
+                                </div>
+                            </div>
+                            <!-- PROF -->
+                            <div class="row">
+                                <div class="input-field col s9">
+                                    <h:inputText id="prof1" value="#{construcaoHorarioBean.reservaOpcional.professor}"/>
+                                    <label for="nome">Professor</label>
+                                </div>
+                            </div>
+
+                            <!-- Sala -->
+                            <div class="row">
+                                <div class="input-field col s9">
+                                    <h:inputText id="sala1" value="#{construcaoHorarioBean.reservaOpcional.sala}"/>
+                                    <label for="nome">Sala</label>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <h:commandLink style="margin-left: 1em" action="#{construcaoHorarioBean.adicionarPreReserva()}" class="green modal-action modal-close waves-effect waves-green btn-flat">
+                            <span class="white-text">OK</span>
+                            <!-- colocar um listener p atualizar tabela -->
+                            <f:ajax execute="@form" render="@form :form"/>
+                        </h:commandLink>
+                        <a href="#!" class="red modal-action modal-close waves-effect waves-green btn-flat">
+                            <span class="white-text">Cancelar</span>
+                        </a>
+
+                    </div>
+                </h:form>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>
+

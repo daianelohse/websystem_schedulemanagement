@@ -1,0 +1,213 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html" 
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough" 
+                xmlns:jsf="http://xmlns.jcp.org/jsf"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <style>
+        #abreMenuLateral {
+            border-radius: 2px;
+            color: #fff;
+            cursor: pointer;
+            font-family: Helvetica;
+            font-size: 13px;
+            padding: 10px 15px;
+            text-decoration: none;
+            text-transform: uppercase;
+            background: #729f98 none repeat scroll 0 0;
+            margin-left: 8px;
+            margin-right: 8px;
+            vertical-align: top;
+        }
+
+        #abreMenuLateral:hover {
+            opacity: 0.87;
+        }
+
+        #abreMenuLateral i {
+            display: inline;
+            font-size: 19px;
+            margin-right: 4px;
+        }
+
+        #abreMenuLateral .material-icons, #menuLateral .material-icons {
+            vertical-align: bottom !important;
+        }
+
+        #abreMenuLateral .material-icons {
+            line-height: inherit;
+        }
+
+
+        #menuLateral .material-icons {
+            color: #BCBCBC;
+            font-size: 22px;
+        }
+
+        #menuTopo nav {
+            background-color: #303030;
+        }
+
+        #menuTopo li {
+            padding-left: 24px !important;
+        }
+
+        #menuTopo a {
+            cursor: pointer;
+        }
+
+        #menuTopo input {
+            font-style: italic;
+            color: #ddd;
+            font-size: 13px;
+        }
+
+        nav ul li:hover, nav ul li.active {
+            background-color: transparent!important;
+        }
+
+        .input-field input[type="search"]:focus {
+            background-color: #5D5D5D;
+
+        }
+
+        #menuLateral {
+            background-color: #303030;
+            display: none;
+            left: -1px;
+            position: fixed;
+            top: 55px;
+            width: 250px;
+            height: 125%;
+            bottom:0;
+            z-index: 9999;
+            color:#fff;
+
+        }
+
+        #menuLateral li {
+            border-bottom: 1px solid #434343;
+            padding: 6px;
+            cursor: pointer;
+        }
+
+        #menuLateral a {
+            color: #fff;
+            overflow-y: auto;
+        }
+
+        #menuLateral ul:last-child > a{
+            padding-left: 20px;
+        }
+
+        #menuLateral li:hover  {
+            background-color: #ffffff;
+        }
+
+        #menuLateral li:hover a {
+            color: #434343;
+
+        }
+
+        #mascara {
+            background-color: rgba(0, 0, 0, 0.5);
+            bottom: 0;
+            display: none;
+            height: 125%;
+            left: 0;
+            right: 0;
+            top: -100px;
+            width: 100%;
+            z-index: 997;
+            position: fixed;
+        }
+
+        #subMenuCadastros {
+            display: none;
+        }
+
+        #subMenuCadastros a {
+            padding-left: 10px;
+        }
+    </style>
+    <script>
+        var menuAberto = false;
+        function menuLateral() {
+            $("#menuLateral").animate({width: 'toggle'}, 350);
+            if (menuAberto) {
+                $("#mascara").fadeOut();
+                menuAberto = false;
+            } else {
+                $("#mascara").fadeIn();
+                menuAberto = true;
+            }
+        }
+
+        var subMenuAberto = false;
+        function abrirSubMenuCadastros() {
+            console.log("entrei");
+            if (subMenuAberto) {
+                $("#subMenuCadastros").slideUp();
+                $("#iconCadsMenu").html("expand_more");
+                subMenuAberto = false;
+            } else {
+                $("#subMenuCadastros").slideDown();
+                $("#iconCadsMenu").html("expand_less");
+                subMenuAberto = true;
+            }
+        }
+    </script>
+
+    <div id="mascara" onclick="menuLateral()"></div>
+
+    <div id="menuTopo" class="navbar-fixed">
+        <nav>
+            <div class="nav-wrapper">
+                <div class="brand-logo">
+
+                    <a id="abreMenuLateral" onclick="menuLateral()">
+                        <i class="material-icons">menu</i>MENU
+                    </a> 
+
+                    <a href="#"><h:graphicImage library="images" name="logo.png" alt="SGH" /></a>
+                </div>
+                <ul class="right hide-on-med-and-down">
+                    <li>
+                        <form>
+                            <div class="input-field">
+                                <input id="search" type="search" />
+                                <label for="search"><i class="material-icons">search</i></label>
+                            </div>
+                        </form>
+                    </li>
+                    <li><b><h:outputText value="#{logadoBean.colaborador.pessoa.primeiroNome}"/></b></li>
+                    <li><a>Configurações</a></li>
+                    <li><a href="/SGH/logout">Sair</a></li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+
+    <div id="menuLateral">
+        <ul>
+            <li><span><h:link outcome="/coordCurso/construcaoHorario" value="Visualizar Horários"/></span></li>
+            <li><h:link outcome="/coordCurso/construcaoHorario" value="Construir Horários"/></li>
+            <li><h:link outcome="/funcionario/minhasReservas" value="Minhas Reservas"/></li>
+            <li><h:link outcome="/admin/controleReserva" value="Controlar Reservas"/></li>
+            <li onclick="abrirSubMenuCadastros()"><a>Cadastro <i id="iconCadsMenu" class="material-icons">expand_more</i></a></li>
+            <ul id="subMenuCadastros">
+                <li><h:link outcome="/admin/listagemAmbientes" value="Ambiente"/></li>
+                <li><h:link outcome="/admin/listagemColaborador" value="Colaborador"/></li>
+                <li><h:link outcome="/admin/listagemCurso" value="Curso"/></li>
+                <li><h:link outcome="/admin/listagemTurma" value="Turma"/></li>
+                <li><h:link outcome="/admin/listagemUnidadeCurricular" value="Unidade Curricular"/></li>
+            </ul>
+            <li><h:link outcome="/admin/relatorioReservaAmbiente" value="Relatório de Ocupação de Ambientes"/></li>
+            <li><a>Ajuda</a></li>
+
+        </ul>
+    </div>
+
+</ui:composition>

@@ -1,0 +1,80 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 27/07/2015, 16:02:41
+    Author     : Daiane e Nicolas
+*/
+body {
+    background-image: url("#{resource['images/login2.jpg']}");
+    background-attachment: fixed;
+    background-position: center center;
+    background-size: 100% auto;
+}
+
+#logar button {
+    background-color: transparent;
+    border: 1px solid white;
+}
+
+#logar button:hover {
+    background-color: #00796b;
+    border: 0;
+}
+
+#esqueciSenha {
+    margin-top: 6px;
+    padding-left: 25px;
+}
+
+#esqueciSenha a {
+    color: #ccc;
+}
+
+#esqueciSenha a:hover {
+    text-decoration: underline;
+}
+
+
+#login .material-icons {
+    color: white;
+    margin-top: 8px;
+}
+
+#logoLogin {
+    border-right: 1px solid #767676;
+    height: 250px;
+}
+
+.fonteEstilizada {
+    font-size: 50px;
+    font-weight: 500;
+}
+
+#login {
+    margin-top:180px;    
+    width: 100%;
+    height: 125%;
+}
+
+#login h3 {
+    text-align: right;
+    font-family: "segoe ui";
+    color: white;
+    font-weight: 100;
+}
+
+
+.caixasLogin:first-child {
+    padding-right: 3em;
+}
+
+#login input {
+    color: #ffffff;
+}
+
+.caixasLogin {
+    width: 50%;
+}

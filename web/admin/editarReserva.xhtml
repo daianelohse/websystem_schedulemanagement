@@ -1,0 +1,149 @@
+<ui:composition template="/template.xhtml"  xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html" 
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough" 
+                xmlns:jsf="http://xmlns.jcp.org/jsf"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <ui:define name="corpo">
+
+        <div id="telaEditarReserva" class="container">
+            <div class="row">
+                <div class="col s12">
+                    <h4 class="blue-text darken-1">Editar reserva</h4>
+                </div>
+            </div>
+            <h:form>
+                <div class="row">
+                    <div class="col s12">
+                        <div class="row">
+                            <div class="col s2">
+                                <h:outputLabel for="dataSolicitacao" value="Data de Solicitação:"/>
+                            </div>
+                            <div class="col s2">
+                                <h:outputText id="dataSolicitacao" 
+                                              value="#{editarReservaBean.formatarData(editarReservaBean.reserva.dataSolicitacao)}"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s2">
+                                <h:outputLabel for="dataReserva" value="Data da Reserva:"/>
+                            </div>
+                            <div class="col s10">
+                                <h:outputText id="dataReserva" 
+                                              value="#{editarReservaBean.formatarData(editarReservaBean.reserva.dataReserva)}"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s2">
+                                <h:outputLabel for="solicitante" value="Solicitante:"/>
+                            </div>
+                            <div class="col s10">
+                                <h:outputText id="solicitante" 
+                                              value="#{editarReservaBean.reserva.colaborador.pessoa.nome}"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s2">
+                                <h:outputLabel for="ambiente" value="Ambiente:"/>
+                            </div>
+                            <div class="col s10">
+                                <h:outputText id="ambiente" 
+                                              value="#{editarReservaBean.reserva.ambiente.sigla}"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s2">
+                                <h:outputLabel for="horarios" value="Horários:"/>
+                            </div>
+                            <div class="col s10">
+                                <h:outputText id="horarios" 
+                                              value="#{editarReservaBean.horarios}"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="divider"></div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col s6">
+                                <h:outputText id="mensagem" 
+                                              styleClass="#{editarReservaBean.corTexto}-text"
+                                              value="#{editarReservaBean.mensagem}"/>
+                            </div>
+                        </div>
+
+
+                        <h:panelGroup rendered="#{editarReservaBean.selecaoAmbienteHabilitada == true}">
+                            <div class="row">
+                                <div id="comboAmbiente" class="col s7 center-align">
+                                    <h:selectOneMenu  id="ambienteSel" class="browser-default" 
+                                                      value="#{editarReservaBean.ambienteSelecionado}"
+                                                      converter="ambienteConverter"
+                                                      required="true"
+                                                      requiredMessage="Informe o ambiente!">
+                                        <f:selectItem itemLabel="Selecione um ambiente" itemValue=""/>
+                                        <f:selectItems value="#{editarReservaBean.ambientesDisponíveis}"
+                                                       var="ambiente"
+                                                       itemValue="#{ambiente}"
+                                                       itemLabel="#{ambiente.sigla}" >
+                                        </f:selectItems>
+                                    </h:selectOneMenu> 
+                                </div>
+                                <div class="input-field col s4">
+                                     <h:message for="ambienteSel" styleClass="red-text text-darken-2"/>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="input-field col s7">
+                                    <h:inputTextarea id="obs" styleClass="materialize-textarea"
+                                                     value="#{editarReservaBean.reserva.informacoesAdicionais}"
+                                                     required="true"
+                                                     requiredMessage="Informe o motivo!"/>
+                                    <label for="obs">Motivo</label>
+                                </div>
+                                <div class="input-field col s4">
+                                    <h:message for="obs" styleClass="red-text text-darken-2"/>
+                                </div>
+                            </div>
+                        </h:panelGroup>
+
+                        <h:panelGroup rendered="#{editarReservaBean.selecaoAmbienteHabilitada == false}">
+                            <div class="row">
+                                <div class="col s6 left-align">
+                                    <h:commandLink styleClass="waves-effect waves-light btn red darken-1"
+                                                   action="#{editarReservaBean.enviarSolicitacao()}"
+                                                   value="Enviar requisição"/>
+
+                                </div> 
+                            </div>
+                        </h:panelGroup>
+
+
+                        <div class="row">
+                            <div class="col s6 m8 l9 right-align">
+                                <h:commandLink styleClass="waves-effect waves-light btn  teal darken-1"
+                                               action="controleReserva.jsf?faces-redirect=true"
+                                               immediate="true">
+                                    <i class="material-icons left">keyboard_backspace</i>Voltar</h:commandLink>
+                            </div>
+
+
+
+                            <div class="col s6 m4 l3 right-align"> 
+                                <h:commandLink styleClass="waves-effect waves-light btn blue darken-1 
+                                               #{editarReservaBean.habilitarSalvar()}"
+                                               rendered="#{editarReservaBean.habilitarSalvar().isEmpty()}"
+                                               action="#{editarReservaBean.salvar()}">
+                                    <i class="material-icons left">
+                                        done</i>Salvar</h:commandLink>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </h:form>
+        </div>
+        </ui:define>
+</ui:composition>

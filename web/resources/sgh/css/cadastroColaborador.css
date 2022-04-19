@@ -1,0 +1,46 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 07/08/2015, 15:11:22
+    Author     : Nicolas
+*/
+
+#lbPerfil{
+    font-size: 17px;
+}
+
+#horarioTrabalho .s2 {
+    width: 15% !important;
+}
+
+#cursoCoordenacao .ui-autocomplete-multiple-container {
+    width: 100% !important;
+    padding: 1em;
+}
+
+#cursoCoordenacao input[type="text"] {
+    height: 2rem !important;
+}
+
+#cursoCoordenacao .ui-autocomplete-token {
+    padding: 0;
+}
+
+#horarioTrabalho .select-wrapper span.caret {
+    z-index: 4 !important;
+}
+
+#horarioTrabalho .select-wrapper input.select-dropdown {
+    padding: 0 0 0 7px;
+    background-color: #43a047;
+    color: #ffffff;
+}
+
+.inputDesativada {
+    background-color: #cccccc !important;
+    color: #cccccc !important;
+}
+

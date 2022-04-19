@@ -1,0 +1,102 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>SGH - Sistema Gerenciador de Horários</title>
+        <h:outputStylesheet library="materialize/css" name="materialize.css"/>
+        <h:outputStylesheet library="sgh/css" name="recuperar_senha.css"/>
+        <link type="text/css" href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"></link>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta charset="utf-8" />
+    </h:head>
+    <h:body>
+        <h:panelGroup id="teste" rendered="#{recuperacaoSenhaBean.panelCadastro}">
+            <div  class="container">
+                <div class="row">
+                    <h3 class="blue-text lighten-4 center-align"> Recuperar Senha </h3> 
+                </div>
+                <div class="row">
+                    <div class="col s12">
+                        <p class="card-panel text-darken-2"> Se você por um caso tenha esquecido seu nome de usuário, 
+                            lembre-se: ele é o mesmo que o seu e-mail, mas sem o "@sc.senai.br". <br/>
+                            Caso você tenha esquecido sua senha, informe seu e-mail que 
+                            está cadastrado no sistema e enviaremos uma nova senha para que você possa acessar o sistema.</p>
+                    </div>
+                    <div class="col s12">
+                        <h:form>
+                            <div class="input-field col s12">
+                                <i class="material-icons prefix">email</i>
+                                <h:inputText class="validate" value="#{recuperacaoSenhaBean.email}" 
+                                             pt:placeholder="Digite seu e-mail aqui" pt:type="email" 
+                                             id="email"></h:inputText>
+                                <label for="email" data-error="Digite seu e-mail corretamente" 
+                                       date-success="">E-mail</label>
+                            </div>
+                            <br/>
+
+                            <div class="col s12">
+                                <div class="col s12">
+                                    <h:outputText class="red-text" value="#{recuperacaoSenhaBean.mensagemErro}"/>
+                                </div>
+                                <div class="col s2 offset-s10">
+                                    <button id="testeHide" class="blue darken-1 waves-effect waves-light btn" jsf:action="#{recuperacaoSenhaBean.enviarEmailRecuperacao()}">Enviar</button>
+                                </div>
+                            </div>
+                        </h:form>
+
+                    </div>
+                </div>
+            </div>
+
+        </h:panelGroup>
+
+        <h:panelGroup class="hide" id="enviandoEmail">
+
+            <div id="content-center" class="container">
+                <div class="row">
+                    <div class="col s12">
+                        <h5 class="center-align">Enviando e-mail...</h5>
+                    </div>
+                    <div class="col s12">
+                        <div class="center-align">
+                            <div class="preloader-wrapper big active">
+                                <div class="spinner-layer spinner-red-only">
+                                    <div class="circle-clipper left">
+                                        <div class="circle"></div>
+                                    </div><div class="gap-patch">
+                                        <div class="circle"></div>
+                                    </div><div class="circle-clipper right">
+                                        <div class="circle"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </h:panelGroup>
+        <h:panelGroup  rendered="#{recuperacaoSenhaBean.panelMensagemEnviada}">
+            <div id="content-center" class="container">
+                <div class="row">
+                    <div class="col s12">
+                        <h5 class="blue-text darken-1 center-align">E-mail enviado com sucesso!</h5>
+                    </div>
+                    <div class="col s12">
+                        <p class="card-panel text-darken-2">Verifique sua caixa de e-mail com sua nova senha e tente realizar o login.</p>
+                        <a href="login.jsf" class="waves-effect waves-light btn">Logar novamente</a>
+                    </div>
+                </div>
+            </div>
+        </h:panelGroup>
+
+        <h:outputScript library="materialize/js" name="jquery-2.1.4.min.js"></h:outputScript>
+        <h:outputScript library="sgh/js" name="eventos.js"></h:outputScript>
+        <h:outputScript library="materialize/js" name="materialize.min.js"></h:outputScript>
+    </h:body>
+</html>
